@@ -8,13 +8,20 @@ const features = ["Climate", "Lighting", "Entertainment", "Energy", "Voice"];
 
 export const SmartHomeDashboard = () => {
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
+  const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
 
   const handleRoomSelect = (room: string) => {
     setSelectedRoom(room);
+    setExpandedFeature(null);
+  };
+
+  const handleFeatureSelect = (feature: string) => {
+    setExpandedFeature(expandedFeature === feature ? null : feature);
   };
 
   const handleBack = () => {
     setSelectedRoom(null);
+    setExpandedFeature(null);
   };
 
   return (
@@ -40,22 +47,32 @@ export const SmartHomeDashboard = () => {
               title="Heating & Climate"
               value="Room Temperature: 22°C"
               subtitle="Humidity: 45%"
+              expanded={expandedFeature === "climate"}
+              onClick={() => handleFeatureSelect("climate")}
             />
             <RoomCard
               type="lighting"
               title="Lighting Control"
+              expanded={expandedFeature === "lighting"}
+              onClick={() => handleFeatureSelect("lighting")}
             />
             <RoomCard
               type="entertainment"
               title="Entertainment"
+              expanded={expandedFeature === "entertainment"}
+              onClick={() => handleFeatureSelect("entertainment")}
             />
             <RoomCard
               type="energy"
               title="Energy Monitoring"
+              expanded={expandedFeature === "energy"}
+              onClick={() => handleFeatureSelect("energy")}
             />
             <RoomCard
               type="voice"
               title="Voice Assistant"
+              expanded={expandedFeature === "voice"}
+              onClick={() => handleFeatureSelect("voice")}
             />
           </div>
         </>
