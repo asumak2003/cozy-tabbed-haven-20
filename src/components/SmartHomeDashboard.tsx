@@ -24,7 +24,7 @@ export const SmartHomeDashboard = () => {
   const handleBack = () => {
     if (selectedFeature) {
       setSelectedFeature(null);
-    } else {
+    } else if (selectedRoom) {
       setSelectedRoom(null);
     }
   };
@@ -40,22 +40,25 @@ export const SmartHomeDashboard = () => {
     }
   };
 
+  const showBackButton = selectedRoom || selectedFeature;
+
   return (
     <div className="min-h-screen bg-[#1a1b26] p-6">
-      <h1 className="text-4xl font-bold text-center mb-8 text-primary">
-        SMART HOME DASHBOARD
-      </h1>
-
-      {(selectedRoom || selectedFeature) && (
-        <Button
-          variant="ghost"
-          className="mb-6 text-primary hover:text-primary/90"
-          onClick={handleBack}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back {selectedFeature ? "to Features" : "to Rooms"}
-        </Button>
-      )}
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-4xl font-bold text-primary">
+          SMART HOME DASHBOARD
+        </h1>
+        {showBackButton && (
+          <Button
+            variant="ghost"
+            className="text-primary hover:text-primary/90"
+            onClick={handleBack}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back {selectedFeature ? "to Features" : "to Rooms"}
+          </Button>
+        )}
+      </div>
 
       {selectedFeature ? (
         <div>
