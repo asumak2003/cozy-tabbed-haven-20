@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RoomCard } from "./RoomCard";
-import { Home, Plus } from "lucide-react";
+import { Home, Plus, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import { TemperatureControl } from "./TemperatureControl";
 import { LightingControl } from "./LightingControl";
@@ -9,6 +9,7 @@ import { Input } from "./ui/input";
 import { toast } from "sonner";
 import { NavigationButtons } from "./navigation/NavigationButtons";
 import { EmptyFeature } from "./features/EmptyFeature";
+import { DeleteConfirmationDialog } from "./dialogs/DeleteConfirmationDialog";
 
 const defaultFeatures = ["Climate", "Lighting", "Entertainment", "Energy", "Voice"];
 
@@ -21,6 +22,11 @@ export const SmartHomeDashboard = () => {
   const [newFeatureName, setNewFeatureName] = useState("");
   const [showAddRoom, setShowAddRoom] = useState(false);
   const [showAddFeature, setShowAddFeature] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState<{
+    isOpen: boolean;
+    type: "room" | "feature";
+    name: string;
+  }>({ isOpen: false, type: "room", name: "" });
 
   const handleRoomSelect = (room: string) => {
     setSelectedRoom(room);
@@ -54,6 +60,31 @@ export const SmartHomeDashboard = () => {
       setNewFeatureName("");
       setShowAddFeature(false);
       toast.success("Feature added successfully!");
+    }
+  };
+
+  const handleDeleteRoom = (room: string) => {
+    setDeleteDialog({ isOpen: true, type: "room", name: room });
+  };
+
+  const handleDeleteFeature = (feature: string) => {
+    setDeleteDialog({ isOpen: true, type: "feature", name: feature });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteDialog.type === "room") {
+      setRooms(rooms.filter(room => room !== deleteDialog.name));
+      if (selectedRoom === deleteDialog.name) {
+        setSelectedRoom(null);
+        setSelectedFeature(null);
+      }
+      toast.success("Room deleted successfully!");
+    } else {
+      setFeatures(features.filter(feature => feature !== deleteDialog.name));
+      if (selectedFeature === deleteDialog.name) {
+        setSelectedFeature(null);
+      }
+      toast.success("Feature deleted successfully!");
     }
   };
 
@@ -91,12 +122,26 @@ export const SmartHomeDashboard = () => {
         <h1 className="text-4xl font-bold text-primary">
           SMART HOME DASHBOARD
         </h1>
-        <NavigationButtons
-          showBackButton={showBackButton}
-          selectedFeature={selectedFeature}
-          onBack={handleBack}
-          onHome={handleHome}
-        />
+        <div className="flex items-center gap-4">
+          {!selectedFeature && !selectedRoom && (
+            <Button onClick={() => setShowAddRoom(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Room
+            </Button>
+          )}
+          {selectedRoom && !selectedFeature && (
+            <Button onClick={() => setShowAddFeature(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Feature
+            </Button>
+          )}
+          <NavigationButtons
+            showBackButton={showBackButton}
+            selectedFeature={selectedFeature}
+            onBack={handleBack}
+            onHome={handleHome}
+          />
+        </div>
       </div>
 
       {selectedFeature ? (
@@ -116,91 +161,85 @@ export const SmartHomeDashboard = () => {
               <div
                 key={feature}
                 onClick={() => handleFeatureSelect(feature)}
-                className="cursor-pointer"
               >
                 <RoomCard
                   type={feature.toLowerCase() as any}
                   title={feature}
+                  icon={feature === newFeatureName ? <Settings className="w-8 h-8 text-primary" /> : undefined}
+                  onDelete={() => handleDeleteFeature(feature)}
                 />
               </div>
             ))}
-            <div onClick={() => setShowAddFeature(true)} className="cursor-pointer">
-              <RoomCard
-                type="climate"
-                title="Add Feature"
-                icon={<Plus className="w-8 h-8 text-primary" />}
-              />
-            </div>
           </div>
-          {showAddFeature && (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-              <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
-                <h3 className="text-lg font-semibold text-white mb-4">Add New Feature</h3>
-                <div className="space-y-4">
-                  <Input
-                    placeholder="Enter feature name"
-                    value={newFeatureName}
-                    onChange={(e) => setNewFeatureName(e.target.value)}
-                    className="bg-background"
-                  />
-                  <div className="flex justify-end gap-2">
-                    <Button variant="ghost" onClick={() => setShowAddFeature(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleAddFeature}>Add Feature</Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </>
       ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-            {rooms.map((room) => (
-              <div
-                key={room}
-                onClick={() => handleRoomSelect(room)}
-                className="cursor-pointer"
-              >
-                <RoomCard
-                  type="climate"
-                  title={room}
-                  icon={<Home className="w-8 h-8 text-primary" />}
-                />
-              </div>
-            ))}
-            <div onClick={() => setShowAddRoom(true)} className="cursor-pointer">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+          {rooms.map((room) => (
+            <div
+              key={room}
+              onClick={() => handleRoomSelect(room)}
+            >
               <RoomCard
                 type="climate"
-                title="Add Room"
-                icon={<Plus className="w-8 h-8 text-primary" />}
+                title={room}
+                icon={<Home className="w-8 h-8 text-primary" />}
+                onDelete={() => handleDeleteRoom(room)}
               />
             </div>
-          </div>
-          {showAddRoom && (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-              <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
-                <h3 className="text-lg font-semibold text-white mb-4">Add New Room</h3>
-                <div className="space-y-4">
-                  <Input
-                    placeholder="Enter room name"
-                    value={newRoomName}
-                    onChange={(e) => setNewRoomName(e.target.value)}
-                    className="bg-background"
-                  />
-                  <div className="flex justify-end gap-2">
-                    <Button variant="ghost" onClick={() => setShowAddRoom(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleAddRoom}>Add Room</Button>
-                  </div>
-                </div>
+          ))}
+        </div>
+      )}
+
+      {showAddRoom && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
+            <h3 className="text-lg font-semibold text-white mb-4">Add New Room</h3>
+            <div className="space-y-4">
+              <Input
+                placeholder="Enter room name"
+                value={newRoomName}
+                onChange={(e) => setNewRoomName(e.target.value)}
+                className="bg-background"
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" onClick={() => setShowAddRoom(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddRoom}>Add Room</Button>
               </div>
             </div>
-          )}
-        </>
+          </div>
+        </div>
       )}
+
+      {showAddFeature && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
+            <h3 className="text-lg font-semibold text-white mb-4">Add New Feature</h3>
+            <div className="space-y-4">
+              <Input
+                placeholder="Enter feature name"
+                value={newFeatureName}
+                onChange={(e) => setNewFeatureName(e.target.value)}
+                className="bg-background"
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" onClick={() => setShowAddFeature(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddFeature}>Add Feature</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <DeleteConfirmationDialog
+        isOpen={deleteDialog.isOpen}
+        onClose={() => setDeleteDialog({ isOpen: false, type: "room", name: "" })}
+        onConfirm={handleConfirmDelete}
+        itemName={deleteDialog.name}
+      />
     </div>
   );
 };
