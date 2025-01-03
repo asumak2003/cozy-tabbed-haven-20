@@ -4,6 +4,7 @@ import { Home, ArrowLeft } from "lucide-react";
 import { Button } from "./ui/button";
 import { TemperatureControl } from "./TemperatureControl";
 import { LightingControl } from "./LightingControl";
+import { VolumeControl } from "./VolumeControl";
 
 const rooms = ["Living Room", "Bedroom", "Kitchen", "Bathroom"];
 const features = ["Climate", "Lighting", "Entertainment", "Energy", "Voice"];
@@ -35,6 +36,8 @@ export const SmartHomeDashboard = () => {
         return <TemperatureControl />;
       case "lighting":
         return <LightingControl />;
+      case "voice":
+        return <VolumeControl />;
       default:
         return <div className="text-white">Feature coming soon...</div>;
     }
