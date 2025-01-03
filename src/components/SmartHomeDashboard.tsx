@@ -11,7 +11,8 @@ import { NavigationButtons } from "./navigation/NavigationButtons";
 import { EmptyFeature } from "./features/EmptyFeature";
 import { DeleteConfirmationDialog } from "./dialogs/DeleteConfirmationDialog";
 
-const defaultFeatures = ["Climate", "Lighting", "Entertainment", "Energy", "Voice"];
+const PIN = "1234";
+const defaultFeatures = ["Lights", "Heating System", "Entertainment"];
 
 export const SmartHomeDashboard = () => {
   const [rooms, setRooms] = useState(["Living Room", "Bedroom", "Kitchen", "Bathroom"]);
@@ -22,6 +23,7 @@ export const SmartHomeDashboard = () => {
   const [newFeatureName, setNewFeatureName] = useState("");
   const [showAddRoom, setShowAddRoom] = useState(false);
   const [showAddFeature, setShowAddFeature] = useState(false);
+  const [pin, setPin] = useState("");
   const [deleteDialog, setDeleteDialog] = useState<{
     isOpen: boolean;
     type: "room" | "feature";
@@ -38,6 +40,11 @@ export const SmartHomeDashboard = () => {
   };
 
   const handleAddRoom = () => {
+    if (pin !== PIN) {
+      toast.error("Incorrect PIN!");
+      return;
+    }
+
     if (newRoomName.trim()) {
       if (rooms.includes(newRoomName.trim())) {
         toast.error("Room already exists!");
@@ -45,6 +52,7 @@ export const SmartHomeDashboard = () => {
       }
       setRooms([...rooms, newRoomName.trim()]);
       setNewRoomName("");
+      setPin("");
       setShowAddRoom(false);
       toast.success("Room added successfully!");
     }
@@ -68,6 +76,10 @@ export const SmartHomeDashboard = () => {
   };
 
   const handleDeleteFeature = (feature: string) => {
+    if (defaultFeatures.includes(feature)) {
+      toast.error("Cannot delete default features!");
+      return;
+    }
     setDeleteDialog({ isOpen: true, type: "feature", name: feature });
   };
 
@@ -86,6 +98,7 @@ export const SmartHomeDashboard = () => {
       }
       toast.success("Feature deleted successfully!");
     }
+    setDeleteDialog({ isOpen: false, type: "room", name: "" });
   };
 
   const handleHome = () => {
@@ -103,11 +116,11 @@ export const SmartHomeDashboard = () => {
 
   const renderFeatureContent = () => {
     switch (selectedFeature?.toLowerCase()) {
-      case "climate":
-        return <TemperatureControl />;
-      case "lighting":
+      case "lights":
         return <LightingControl />;
-      case "voice":
+      case "heating system":
+        return <TemperatureControl />;
+      case "entertainment":
         return <VolumeControl />;
       default:
         return <EmptyFeature />;
@@ -167,6 +180,7 @@ export const SmartHomeDashboard = () => {
                   title={feature}
                   icon={feature === newFeatureName ? <Settings className="w-8 h-8 text-primary" /> : undefined}
                   onDelete={() => handleDeleteFeature(feature)}
+                  showDelete={!defaultFeatures.includes(feature)}
                 />
               </div>
             ))}
@@ -201,8 +215,21 @@ export const SmartHomeDashboard = () => {
                 onChange={(e) => setNewRoomName(e.target.value)}
                 className="bg-background"
               />
+              <Input
+                type="password"
+                placeholder="Enter PIN"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                className="bg-background"
+              />
               <div className="flex justify-end gap-2">
-                <Button variant="ghost" onClick={() => setShowAddRoom(false)}>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => {
+                    setShowAddRoom(false);
+                    setPin("");
+                  }}
+                >
                   Cancel
                 </Button>
                 <Button onClick={handleAddRoom}>Add Room</Button>
