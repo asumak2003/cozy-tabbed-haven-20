@@ -1,17 +1,24 @@
 import { useState } from "react";
 import { RoomCard } from "./RoomCard";
-import { Home, ArrowLeft } from "lucide-react";
+import { Home, ArrowLeft, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { TemperatureControl } from "./TemperatureControl";
 import { LightingControl } from "./LightingControl";
 import { VolumeControl } from "./VolumeControl";
+import { Input } from "./ui/input";
+import { toast } from "sonner";
 
-const rooms = ["Living Room", "Bedroom", "Kitchen", "Bathroom"];
-const features = ["Climate", "Lighting", "Entertainment", "Energy", "Voice"];
+const defaultFeatures = ["Climate", "Lighting", "Entertainment", "Energy", "Voice"];
 
 export const SmartHomeDashboard = () => {
+  const [rooms, setRooms] = useState(["Living Room", "Bedroom", "Kitchen", "Bathroom"]);
+  const [features, setFeatures] = useState(defaultFeatures);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
+  const [newRoomName, setNewRoomName] = useState("");
+  const [newFeatureName, setNewFeatureName] = useState("");
+  const [showAddRoom, setShowAddRoom] = useState(false);
+  const [showAddFeature, setShowAddFeature] = useState(false);
 
   const handleRoomSelect = (room: string) => {
     setSelectedRoom(room);
@@ -20,6 +27,37 @@ export const SmartHomeDashboard = () => {
 
   const handleFeatureSelect = (feature: string) => {
     setSelectedFeature(feature);
+  };
+
+  const handleAddRoom = () => {
+    if (newRoomName.trim()) {
+      if (rooms.includes(newRoomName.trim())) {
+        toast.error("Room already exists!");
+        return;
+      }
+      setRooms([...rooms, newRoomName.trim()]);
+      setNewRoomName("");
+      setShowAddRoom(false);
+      toast.success("Room added successfully!");
+    }
+  };
+
+  const handleAddFeature = () => {
+    if (newFeatureName.trim()) {
+      if (features.includes(newFeatureName.trim())) {
+        toast.error("Feature already exists!");
+        return;
+      }
+      setFeatures([...features, newFeatureName.trim()]);
+      setNewFeatureName("");
+      setShowAddFeature(false);
+      toast.success("Feature added successfully!");
+    }
+  };
+
+  const handleHome = () => {
+    setSelectedRoom(null);
+    setSelectedFeature(null);
   };
 
   const handleBack = () => {
@@ -51,16 +89,28 @@ export const SmartHomeDashboard = () => {
         <h1 className="text-4xl font-bold text-primary">
           SMART HOME DASHBOARD
         </h1>
-        {showBackButton && (
-          <Button
-            variant="ghost"
-            className="text-primary hover:text-primary/90"
-            onClick={handleBack}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back {selectedFeature ? "to Features" : "to Rooms"}
-          </Button>
-        )}
+        <div className="flex gap-4">
+          {showBackButton && (
+            <Button
+              variant="ghost"
+              className="text-primary hover:text-primary/90"
+              onClick={handleBack}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back {selectedFeature ? "to Features" : "to Rooms"}
+            </Button>
+          )}
+          {selectedFeature && (
+            <Button
+              variant="ghost"
+              className="text-primary hover:text-primary/90"
+              onClick={handleHome}
+            >
+              <Home className="mr-2 h-4 w-4" />
+              Home
+            </Button>
+          )}
+        </div>
       </div>
 
       {selectedFeature ? (
@@ -88,24 +138,82 @@ export const SmartHomeDashboard = () => {
                 />
               </div>
             ))}
-          </div>
-        </>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-          {rooms.map((room) => (
-            <div
-              key={room}
-              onClick={() => handleRoomSelect(room)}
-              className="cursor-pointer"
-            >
+            <div onClick={() => setShowAddFeature(true)} className="cursor-pointer">
               <RoomCard
                 type="climate"
-                title={room}
-                icon={<Home className="w-8 h-8 text-primary" />}
+                title="Add Feature"
+                icon={<Plus className="w-8 h-8 text-primary" />}
               />
             </div>
-          ))}
-        </div>
+          </div>
+          {showAddFeature && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
+              <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
+                <h3 className="text-lg font-semibold text-white mb-4">Add New Feature</h3>
+                <div className="space-y-4">
+                  <Input
+                    placeholder="Enter feature name"
+                    value={newFeatureName}
+                    onChange={(e) => setNewFeatureName(e.target.value)}
+                    className="bg-background"
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" onClick={() => setShowAddFeature(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleAddFeature}>Add Feature</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+            {rooms.map((room) => (
+              <div
+                key={room}
+                onClick={() => handleRoomSelect(room)}
+                className="cursor-pointer"
+              >
+                <RoomCard
+                  type="climate"
+                  title={room}
+                  icon={<Home className="w-8 h-8 text-primary" />}
+                />
+              </div>
+            ))}
+            <div onClick={() => setShowAddRoom(true)} className="cursor-pointer">
+              <RoomCard
+                type="climate"
+                title="Add Room"
+                icon={<Plus className="w-8 h-8 text-primary" />}
+              />
+            </div>
+          </div>
+          {showAddRoom && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
+              <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
+                <h3 className="text-lg font-semibold text-white mb-4">Add New Room</h3>
+                <div className="space-y-4">
+                  <Input
+                    placeholder="Enter room name"
+                    value={newRoomName}
+                    onChange={(e) => setNewRoomName(e.target.value)}
+                    className="bg-background"
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" onClick={() => setShowAddRoom(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleAddRoom}>Add Room</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
