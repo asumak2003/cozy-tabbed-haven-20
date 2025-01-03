@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { RoomCard } from "./RoomCard";
-import { Home, ArrowLeft, Plus } from "lucide-react";
+import { Home, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { TemperatureControl } from "./TemperatureControl";
 import { LightingControl } from "./LightingControl";
 import { VolumeControl } from "./VolumeControl";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
+import { NavigationButtons } from "./navigation/NavigationButtons";
+import { EmptyFeature } from "./features/EmptyFeature";
 
 const defaultFeatures = ["Climate", "Lighting", "Entertainment", "Energy", "Voice"];
 
@@ -77,7 +79,7 @@ export const SmartHomeDashboard = () => {
       case "voice":
         return <VolumeControl />;
       default:
-        return <div className="text-white">Feature coming soon...</div>;
+        return <EmptyFeature />;
     }
   };
 
@@ -89,28 +91,12 @@ export const SmartHomeDashboard = () => {
         <h1 className="text-4xl font-bold text-primary">
           SMART HOME DASHBOARD
         </h1>
-        <div className="flex gap-4">
-          {showBackButton && (
-            <Button
-              variant="ghost"
-              className="text-primary hover:text-primary/90"
-              onClick={handleBack}
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back {selectedFeature ? "to Features" : "to Rooms"}
-            </Button>
-          )}
-          {selectedFeature && (
-            <Button
-              variant="ghost"
-              className="text-primary hover:text-primary/90"
-              onClick={handleHome}
-            >
-              <Home className="mr-2 h-4 w-4" />
-              Home
-            </Button>
-          )}
-        </div>
+        <NavigationButtons
+          showBackButton={showBackButton}
+          selectedFeature={selectedFeature}
+          onBack={handleBack}
+          onHome={handleHome}
+        />
       </div>
 
       {selectedFeature ? (
