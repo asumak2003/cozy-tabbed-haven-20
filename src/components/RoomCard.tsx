@@ -39,8 +39,7 @@ export const RoomCard = ({
   onDelete,
   showDelete = true,
 }: RoomCardProps) => {
-  const Icon = icons[type.toLowerCase()];
-  const defaultIcon = Icon || Settings;
+  const IconComponent = icons[type.toLowerCase()] || Settings;
 
   return (
     <Card className="p-6 bg-secondary hover:bg-secondary/90 transition-colors cursor-pointer relative">
@@ -58,7 +57,7 @@ export const RoomCard = ({
         </Button>
       )}
       <div className="flex flex-col items-center gap-4">
-        {icon ? icon : <defaultIcon className="w-8 h-8 text-primary" />}
+        {icon ? icon : <IconComponent className="w-8 h-8 text-primary" />}
         <h3 className="text-lg font-semibold text-white">{title}</h3>
         {value && <p className="text-sm text-gray-300">{value}</p>}
         {subtitle && <p className="text-xs text-gray-400">{subtitle}</p>}
