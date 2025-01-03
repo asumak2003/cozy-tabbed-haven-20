@@ -83,7 +83,7 @@ export const SmartHomeDashboard = () => {
     }
   };
 
-  const showBackButton = selectedRoom || selectedFeature;
+  const showBackButton = Boolean(selectedRoom || selectedFeature);
 
   return (
     <div className="min-h-screen bg-[#1a1b26] p-6">
