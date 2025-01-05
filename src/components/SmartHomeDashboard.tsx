@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RoomCard } from "./RoomCard";
-import { Home, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { TemperatureControl } from "./TemperatureControl";
 import { LightingControl } from "./LightingControl";
@@ -12,6 +12,8 @@ import { EmptyFeature } from "./features/EmptyFeature";
 import { DeleteConfirmationDialog } from "./dialogs/DeleteConfirmationDialog";
 import { EnergyManagement } from "./features/EnergyManagement";
 import { EnergyButton } from "./features/EnergyButton";
+import { VoiceAssistant } from "./features/VoiceAssistant";
+import { RoomGrid } from "./features/RoomGrid";
 
 const PIN = "1234";
 const defaultFeatures = ["Lights", "Heating System", "Entertainment"];
@@ -200,25 +202,18 @@ export const SmartHomeDashboard = () => {
         </>
       ) : (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-            {rooms.map((room) => (
-              <div
-                key={room}
-                onClick={() => handleRoomSelect(room)}
-              >
-                <RoomCard
-                  type="climate"
-                  title={room}
-                  icon={<Home className="w-8 h-8 text-primary" />}
-                  onDelete={() => handleDeleteRoom(room)}
-                />
-              </div>
-            ))}
+          <RoomGrid
+            rooms={rooms}
+            onRoomSelect={handleRoomSelect}
+            onRoomDelete={handleDeleteRoom}
+          />
+          <div className="max-w-md mx-auto">
+            <EnergyButton onClick={handleEnergyClick} />
           </div>
-          <EnergyButton onClick={handleEnergyClick} />
         </div>
       )}
 
+      {/* Add Room Modal */}
       {showAddRoom && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
@@ -254,6 +249,7 @@ export const SmartHomeDashboard = () => {
         </div>
       )}
 
+      {/* Add Feature Modal */}
       {showAddFeature && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
@@ -282,6 +278,8 @@ export const SmartHomeDashboard = () => {
         onConfirm={handleConfirmDelete}
         itemName={deleteDialog.name}
       />
+
+      <VoiceAssistant />
     </div>
   );
 };

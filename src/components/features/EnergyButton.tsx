@@ -1,5 +1,4 @@
 import { Gauge } from "lucide-react";
-import { Button } from "../ui/button";
 
 interface EnergyButtonProps {
   onClick: () => void;
@@ -7,13 +6,12 @@ interface EnergyButtonProps {
 
 export const EnergyButton = ({ onClick }: EnergyButtonProps) => {
   return (
-    <Button
-      variant="outline"
-      className="w-full mt-6 bg-card hover:bg-card/80"
+    <button
       onClick={onClick}
+      className="w-full bg-card hover:bg-card/80 transition-all duration-300 rounded-lg p-4 flex items-center justify-center gap-3 border border-primary/20 shadow-lg hover:shadow-primary/20"
     >
-      <Gauge className="mr-2 h-5 w-5" />
-      Energy Management
-    </Button>
+      <Gauge className="w-6 h-6 text-primary" />
+      <span className="text-lg font-semibold text-white">Energy Management</span>
+    </button>
   );
 };
