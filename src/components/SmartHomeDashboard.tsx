@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RoomCard } from "./RoomCard";
-import { Home, Plus, Settings } from "lucide-react";
+import { Home, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { TemperatureControl } from "./TemperatureControl";
 import { LightingControl } from "./LightingControl";
@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { NavigationButtons } from "./navigation/NavigationButtons";
 import { EmptyFeature } from "./features/EmptyFeature";
 import { DeleteConfirmationDialog } from "./dialogs/DeleteConfirmationDialog";
+import { EnergyManagement } from "./features/EnergyManagement";
+import { EnergyButton } from "./features/EnergyButton";
 
 const PIN = "1234";
 const defaultFeatures = ["Lights", "Heating System", "Entertainment"];
@@ -19,6 +21,7 @@ export const SmartHomeDashboard = () => {
   const [features, setFeatures] = useState(defaultFeatures);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
+  const [showEnergyManagement, setShowEnergyManagement] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
   const [newFeatureName, setNewFeatureName] = useState("");
   const [showAddRoom, setShowAddRoom] = useState(false);
@@ -107,7 +110,9 @@ export const SmartHomeDashboard = () => {
   };
 
   const handleBack = () => {
-    if (selectedFeature) {
+    if (showEnergyManagement) {
+      setShowEnergyManagement(false);
+    } else if (selectedFeature) {
       setSelectedFeature(null);
     } else if (selectedRoom) {
       setSelectedRoom(null);
@@ -127,7 +132,13 @@ export const SmartHomeDashboard = () => {
     }
   };
 
-  const showBackButton = Boolean(selectedRoom || selectedFeature);
+  const showBackButton = Boolean(selectedRoom || selectedFeature || showEnergyManagement);
+
+  const handleEnergyClick = () => {
+    setSelectedRoom(null);
+    setSelectedFeature(null);
+    setShowEnergyManagement(true);
+  };
 
   return (
     <div className="min-h-screen bg-[#1a1b26] p-6">
@@ -136,7 +147,7 @@ export const SmartHomeDashboard = () => {
           SMART HOME DASHBOARD
         </h1>
         <div className="flex items-center gap-4">
-          {!selectedFeature && !selectedRoom && (
+          {!selectedFeature && !selectedRoom && !showEnergyManagement && (
             <Button onClick={() => setShowAddRoom(true)}>
               <Plus className="mr-2 h-4 w-4" />
               Add Room
@@ -157,7 +168,9 @@ export const SmartHomeDashboard = () => {
         </div>
       </div>
 
-      {selectedFeature ? (
+      {showEnergyManagement ? (
+        <EnergyManagement />
+      ) : selectedFeature ? (
         <div>
           <h2 className="text-2xl font-semibold text-white mb-6">
             {selectedRoom} → {selectedFeature}
@@ -178,7 +191,6 @@ export const SmartHomeDashboard = () => {
                 <RoomCard
                   type={feature.toLowerCase() as any}
                   title={feature}
-                  icon={feature === newFeatureName ? <Settings className="w-8 h-8 text-primary" /> : undefined}
                   onDelete={() => handleDeleteFeature(feature)}
                   showDelete={!defaultFeatures.includes(feature)}
                 />
@@ -187,20 +199,23 @@ export const SmartHomeDashboard = () => {
           </div>
         </>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-          {rooms.map((room) => (
-            <div
-              key={room}
-              onClick={() => handleRoomSelect(room)}
-            >
-              <RoomCard
-                type="climate"
-                title={room}
-                icon={<Home className="w-8 h-8 text-primary" />}
-                onDelete={() => handleDeleteRoom(room)}
-              />
-            </div>
-          ))}
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+            {rooms.map((room) => (
+              <div
+                key={room}
+                onClick={() => handleRoomSelect(room)}
+              >
+                <RoomCard
+                  type="climate"
+                  title={room}
+                  icon={<Home className="w-8 h-8 text-primary" />}
+                  onDelete={() => handleDeleteRoom(room)}
+                />
+              </div>
+            ))}
+          </div>
+          <EnergyButton onClick={handleEnergyClick} />
         </div>
       )}
 
