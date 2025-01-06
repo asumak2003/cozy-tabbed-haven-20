@@ -20,19 +20,22 @@ export const HomeScreen = ({ rooms, onRoomSelect, onRoomDelete }: HomeScreenProp
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-white">Rooms</h2>
+        <Button 
+          onClick={() => setShowVideoSurveillance(true)}
+          className="bg-card hover:bg-card/80 transition-all duration-300"
+        >
+          <Video className="mr-2 h-5 w-5 text-primary" />
+          Video Surveillance
+        </Button>
+      </div>
       <RoomGrid
         rooms={rooms}
         onRoomSelect={onRoomSelect}
         onRoomDelete={onRoomDelete}
       />
       <div className="flex flex-col gap-4 max-w-md mx-auto">
-        <Button 
-          onClick={() => setShowVideoSurveillance(true)}
-          className="w-full bg-card hover:bg-card/80 transition-all duration-300 rounded-lg p-4 flex items-center justify-center gap-3 border border-primary/20 shadow-lg hover:shadow-primary/20"
-        >
-          <Video className="w-6 h-6 text-primary" />
-          <span className="text-lg font-semibold text-white">Video Surveillance</span>
-        </Button>
         <EnergyButton onClick={() => {}} />
       </div>
     </div>
