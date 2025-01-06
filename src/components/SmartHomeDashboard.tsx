@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RoomCard } from "./RoomCard";
-import { Plus } from "lucide-react";
+import { Plus, Video } from "lucide-react";
 import { Button } from "./ui/button";
 import { TemperatureControl } from "./TemperatureControl";
 import { LightingControl } from "./LightingControl";
@@ -14,9 +14,10 @@ import { EnergyManagement } from "./features/EnergyManagement";
 import { EnergyButton } from "./features/EnergyButton";
 import { VoiceAssistant } from "./features/VoiceAssistant";
 import { RoomGrid } from "./features/RoomGrid";
+import { VideoSurveillance } from "./features/VideoSurveillance";
 
 const PIN = "1234";
-const defaultFeatures = ["Lights", "Heating System", "Entertainment"];
+const defaultFeatures = ["Lights", "Heating System", "Entertainment", "Video Surveillance"];
 
 export const SmartHomeDashboard = () => {
   const [rooms, setRooms] = useState(["Living Room", "Bedroom", "Kitchen", "Bathroom"]);
@@ -129,6 +130,8 @@ export const SmartHomeDashboard = () => {
         return <TemperatureControl />;
       case "entertainment":
         return <VolumeControl />;
+      case "video surveillance":
+        return <VideoSurveillance />;
       default:
         return <EmptyFeature />;
     }
@@ -177,7 +180,7 @@ export const SmartHomeDashboard = () => {
           <h2 className="text-2xl font-semibold text-white mb-6">
             {selectedRoom} → {selectedFeature}
           </h2>
-          <div className="max-w-md mx-auto">
+          <div className="max-w-6xl mx-auto">
             {renderFeatureContent()}
           </div>
         </div>
@@ -193,6 +196,7 @@ export const SmartHomeDashboard = () => {
                 <RoomCard
                   type={feature.toLowerCase() as any}
                   title={feature}
+                  icon={feature.toLowerCase() === "video surveillance" ? <Video className="w-8 h-8 text-primary" /> : undefined}
                   onDelete={() => handleDeleteFeature(feature)}
                   showDelete={!defaultFeatures.includes(feature)}
                 />
@@ -213,7 +217,6 @@ export const SmartHomeDashboard = () => {
         </div>
       )}
 
-      {/* Add Room Modal */}
       {showAddRoom && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
@@ -249,7 +252,6 @@ export const SmartHomeDashboard = () => {
         </div>
       )}
 
-      {/* Add Feature Modal */}
       {showAddFeature && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
