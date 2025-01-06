@@ -3,6 +3,10 @@ import { Camera, Unlock, Video } from "lucide-react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 
+interface VideoSurveillanceProps {
+  onBack: () => void;
+}
+
 interface CameraWindow {
   id: string;
   name: string;
@@ -17,7 +21,7 @@ const cameras: CameraWindow[] = [
   { id: "garage", name: "Garage", location: "Exterior" }
 ];
 
-export const VideoSurveillance = () => {
+export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
 
   const handleOpenDoor = () => {
@@ -29,6 +33,10 @@ export const VideoSurveillance = () => {
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold text-white">Video Surveillance</h2>
+        <Button variant="outline" onClick={onBack}>Back</Button>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {cameras.map((camera) => (
           <div
