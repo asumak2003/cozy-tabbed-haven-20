@@ -14,6 +14,8 @@ export const NavigationButtons = ({
   onBack,
   onHome,
 }: NavigationButtonsProps) => {
+  const isHomeScreen = !showBackButton;
+
   return (
     <div className="flex gap-2">
       {showBackButton && (
@@ -26,14 +28,16 @@ export const NavigationButtons = ({
           Back {selectedFeature ? "to Features" : "to Rooms"}
         </Button>
       )}
-      <Button
-        variant="ghost"
-        className="text-primary hover:text-primary/90"
-        onClick={onHome}
-      >
-        <Home className="mr-2 h-4 w-4" />
-        Home
-      </Button>
+      {!isHomeScreen && (
+        <Button
+          variant="ghost"
+          className="text-primary hover:text-primary/90"
+          onClick={onHome}
+        >
+          <Home className="mr-2 h-4 w-4" />
+          Home
+        </Button>
+      )}
     </div>
   );
 };

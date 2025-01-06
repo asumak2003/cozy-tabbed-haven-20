@@ -9,21 +9,25 @@ export const VoiceAssistant = () => {
     if (isListening) {
       const handleClickOutside = () => {
         setIsListening(false);
-        toast.info("Voice assistant dismissed");
+        toast.dismiss(); // Dismiss any existing toasts
       };
 
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
+      // Add the event listener with a slight delay to prevent immediate triggering
+      const timeoutId = setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+      }, 100);
+
+      return () => {
+        clearTimeout(timeoutId);
+        document.removeEventListener('click', handleClickOutside);
+      };
     }
   }, [isListening]);
 
   const handleVoiceClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent the click from immediately triggering the document click handler
+    e.stopPropagation();
     setIsListening(true);
     toast.success("Hello! How can I help you with your smart home today?");
-    setTimeout(() => {
-      toast.info("Listening...");
-    }, 2000);
   };
 
   return (
