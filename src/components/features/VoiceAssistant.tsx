@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mic } from "lucide-react";
 import { toast } from "sonner";
 
 export const VoiceAssistant = () => {
   const [isListening, setIsListening] = useState(false);
 
-  const handleVoiceClick = () => {
+  useEffect(() => {
+    if (isListening) {
+      const handleClickOutside = () => {
+        setIsListening(false);
+        toast.info("Voice assistant dismissed");
+      };
+
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [isListening]);
+
+  const handleVoiceClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the click from immediately triggering the document click handler
     setIsListening(true);
-    // Simulate voice assistant behavior
     toast.success("Hello! How can I help you with your smart home today?");
     setTimeout(() => {
-      setIsListening(false);
       toast.info("Listening...");
     }, 2000);
   };

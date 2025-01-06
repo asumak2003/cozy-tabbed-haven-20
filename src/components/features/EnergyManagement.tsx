@@ -29,63 +29,65 @@ export const EnergyManagement = () => {
   const totalGas = data.reduce((acc, curr) => acc + curr.gas, 0);
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-end mb-4">
-        <Button
-          variant={isMonthlyView ? "secondary" : "outline"}
-          onClick={() => setIsMonthlyView(false)}
-          className="mr-2"
-        >
-          Weekly
-        </Button>
-        <Button
-          variant={isMonthlyView ? "outline" : "secondary"}
-          onClick={() => setIsMonthlyView(true)}
-        >
-          Monthly
-        </Button>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-xl font-semibold text-white">Energy Usage Overview</h2>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant={!isMonthlyView ? "secondary" : "outline"}
+            onClick={() => setIsMonthlyView(false)}
+          >
+            Weekly
+          </Button>
+          <Button
+            size="sm"
+            variant={isMonthlyView ? "secondary" : "outline"}
+            onClick={() => setIsMonthlyView(true)}
+          >
+            Monthly
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Electricity Usage
-            </CardTitle>
-            <Bolt className="h-4 w-4 text-primary" />
+      <div className="grid grid-cols-2 gap-4">
+        <Card className="p-2">
+          <CardHeader className="p-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm">Electricity</CardTitle>
+              <Bolt className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalElectricity} kWh</div>
+          <CardContent className="p-2">
+            <div className="text-xl font-bold">{totalElectricity} kWh</div>
             <p className="text-xs text-muted-foreground">
-              {isMonthlyView ? 'Monthly' : 'Weekly'} consumption
+              {isMonthlyView ? 'Monthly' : 'Weekly'}
             </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Gas Usage
-            </CardTitle>
-            <Gauge className="h-4 w-4 text-primary" />
+
+        <Card className="p-2">
+          <CardHeader className="p-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm">Gas</CardTitle>
+              <Gauge className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalGas} m³</div>
+          <CardContent className="p-2">
+            <div className="text-xl font-bold">{totalGas} m³</div>
             <p className="text-xs text-muted-foreground">
-              {isMonthlyView ? 'Monthly' : 'Weekly'} consumption
+              {isMonthlyView ? 'Monthly' : 'Weekly'}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="w-full h-[400px]">
-        <CardHeader>
-          <CardTitle>{isMonthlyView ? 'Monthly' : 'Weekly'} Energy Usage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
+      <Card className="w-full h-[300px]">
+        <CardContent className="p-4">
+          <ResponsiveContainer width="100%" height={250}>
             <LineChart 
               data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#444" />
               <XAxis 
