@@ -1,0 +1,39 @@
+name: Deploy Static Site
+
+on:
+  push:
+    branches:
+      - main  # Replace with your branch name if needed
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Use the Node.js version specified in your project
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./dist  # Path to the folder with built files
+
+      - name: Deploy
+        uses: actions/deploy-pages@v1
+
+
