@@ -21,8 +21,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"), // Alias for src directory
     },
   },
-   build: {
-    outDir: "dist", // Default, but included for clarity
-    emptyOutDir: true, // Clean output directory before building
-  },
 }));
