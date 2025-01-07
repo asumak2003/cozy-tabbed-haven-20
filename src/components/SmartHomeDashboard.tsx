@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Video } from "lucide-react";
 import { Button } from "./ui/button";
 import { TemperatureControl } from "./TemperatureControl";
 import { LightingControl } from "./LightingControl";
@@ -13,6 +13,7 @@ import { EnergyManagement } from "./features/EnergyManagement";
 import { VoiceAssistant } from "./features/VoiceAssistant";
 import { HomeScreen } from "./features/HomeScreen";
 import { RoomCard } from "./RoomCard";
+import { VideoSurveillance } from "./features/VideoSurveillance";
 
 const PIN = "1234";
 const defaultFeatures = ["Lights", "Heating System", "Entertainment"];
@@ -23,6 +24,7 @@ export const SmartHomeDashboard = () => {
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
   const [showEnergyManagement, setShowEnergyManagement] = useState(false);
+  const [showVideoSurveillance, setShowVideoSurveillance] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
   const [newFeatureName, setNewFeatureName] = useState("");
   const [showAddRoom, setShowAddRoom] = useState(false);
@@ -81,6 +83,12 @@ export const SmartHomeDashboard = () => {
     setSelectedFeature(null);
   };
 
+  const handleVideoSurveillance = () => {
+    setShowVideoSurveillance(true);
+    setSelectedRoom(null);
+    setSelectedFeature(null);
+  };
+
   const handleDeleteRoom = (room: string) => {
     setDeleteDialog({ isOpen: true, type: "room", name: room });
   };
@@ -115,10 +123,13 @@ export const SmartHomeDashboard = () => {
     setSelectedRoom(null);
     setSelectedFeature(null);
     setShowEnergyManagement(false);
+    setShowVideoSurveillance(false);
   };
 
   const handleBack = () => {
-    if (showEnergyManagement) {
+    if (showVideoSurveillance) {
+      setShowVideoSurveillance(false);
+    } else if (showEnergyManagement) {
       setShowEnergyManagement(false);
     } else if (selectedFeature) {
       setSelectedFeature(null);
@@ -140,7 +151,15 @@ export const SmartHomeDashboard = () => {
     }
   };
 
-  const showBackButton = Boolean(selectedRoom || selectedFeature || showEnergyManagement);
+  const showBackButton = Boolean(selectedRoom || selectedFeature || showEnergyManagement || showVideoSurveillance);
+
+  if (showVideoSurveillance) {
+    return (
+      <div className="fixed inset-0 bg-[#1a1b26] z-50">
+        <VideoSurveillance onBack={handleBack} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#1a1b26] p-6">
@@ -150,10 +169,16 @@ export const SmartHomeDashboard = () => {
         </h1>
         <div className="flex items-center gap-4">
           {!selectedFeature && !selectedRoom && !showEnergyManagement && (
-            <Button onClick={() => setShowAddRoom(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Room
-            </Button>
+            <>
+              <Button onClick={() => setShowAddRoom(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Room
+              </Button>
+              <Button onClick={handleVideoSurveillance}>
+                <Video className="mr-2 h-4 w-4" />
+                Video Surveillance
+              </Button>
+            </>
           )}
           {selectedRoom && !selectedFeature && (
             <Button onClick={() => setShowAddFeature(true)}>
