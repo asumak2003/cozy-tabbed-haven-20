@@ -75,6 +75,12 @@ export const SmartHomeDashboard = () => {
     }
   };
 
+  const handleEnergyManagement = () => {
+    setShowEnergyManagement(true);
+    setSelectedRoom(null);
+    setSelectedFeature(null);
+  };
+
   const handleDeleteRoom = (room: string) => {
     setDeleteDialog({ isOpen: true, type: "room", name: room });
   };
@@ -201,6 +207,7 @@ export const SmartHomeDashboard = () => {
           rooms={rooms}
           onRoomSelect={handleRoomSelect}
           onRoomDelete={handleDeleteRoom}
+          onEnergyManagement={handleEnergyManagement}
         />
       )}
 
