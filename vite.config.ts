@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   // Set the base path for your app (e.g., for GitHub Pages or a subdirectory deployment)
-  base: mode === "development" ? "/" : "/cozy-tabbed-haven-20/",
+  base: "/cozy-tabbed-haven-20/",
 
   server: {
     host: "::",  // Accept connections from all IP addresses
