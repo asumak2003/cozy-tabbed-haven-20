@@ -83,19 +83,20 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
           </SelectContent>
         </Select>
 
-        <div className="w-full max-w-3xl mx-auto aspect-video bg-black/90 rounded-lg flex items-center justify-center">
+        <div className="w-full max-w-2xl mx-auto aspect-video bg-black/90 rounded-lg flex items-center justify-center">
           <div className="text-center text-white">
             <Camera className="h-12 w-12 mx-auto mb-2 text-primary" />
             <p className="text-lg">
               {getCameraLabel(selectedCamera)}
             </p>
+            <p className="text-sm text-gray-400 mt-2">Camera Feed Placeholder</p>
           </div>
         </div>
 
         {selectedCamera === "front" && (
           <Button 
             onClick={handleOpenDoor}
-            className="w-full max-w-3xl mx-auto bg-primary hover:bg-primary/80"
+            className="w-full max-w-2xl mx-auto bg-primary hover:bg-primary/80"
           >
             Open Door
           </Button>
@@ -112,19 +113,20 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
                 placeholder="Enter PIN"
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                className="bg-background text-black"
+                className="bg-background"
               />
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setShowPinDialog(false);
-                  setPin("");
-                }}
-                className="mr-2"
-              >
-                Cancel
-              </Button>
-              <Button onClick={handlePinSubmit}>Submit</Button>
+              <div className="flex justify-end gap-2">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => {
+                    setShowPinDialog(false);
+                    setPin("");
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button onClick={handlePinSubmit}>Submit</Button>
+              </div>
             </div>
           </div>
         </div>
