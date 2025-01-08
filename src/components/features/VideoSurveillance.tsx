@@ -16,7 +16,7 @@ interface VideoSurveillanceProps {
 }
 
 export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
-  const [selectedCamera, setSelectedCamera] = useState("living");
+  const [selectedCamera, setSelectedCamera] = useState("front");
   const [showPinDialog, setShowPinDialog] = useState(false);
   const [pin, setPin] = useState("");
 
@@ -39,9 +39,12 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
 
   const handleCameraChange = (value: string) => {
     if (value === "front") {
-      setShowPinDialog(true);
-    } else {
       setSelectedCamera(value);
+    } else {
+      setShowPinDialog(true);
+      if (!showPinDialog) {
+        setPin("");
+      }
     }
   };
 
@@ -75,20 +78,20 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
             <SelectValue placeholder="Select camera" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="front">Front Door Camera</SelectItem>
             <SelectItem value="living">Living Room Camera</SelectItem>
             <SelectItem value="bedroom">Bedroom Camera</SelectItem>
             <SelectItem value="kitchen">Kitchen Camera</SelectItem>
             <SelectItem value="bathroom">Bathroom Camera</SelectItem>
-            <SelectItem value="front">Front Door Camera</SelectItem>
           </SelectContent>
         </Select>
 
         <div className="w-full max-w-2xl mx-auto aspect-video bg-black/90 rounded-lg flex items-center justify-center">
           <div className="text-center text-white">
-            {selectedCamera !== "front" ? (
-              <MapPin className="h-12 w-12 mx-auto mb-2 text-primary" />
-            ) : (
+            {selectedCamera === "front" ? (
               <Camera className="h-12 w-12 mx-auto mb-2 text-primary" />
+            ) : (
+              <MapPin className="h-12 w-12 mx-auto mb-2 text-primary" />
             )}
             <p className="text-lg">
               {getCameraLabel(selectedCamera)}
@@ -98,19 +101,21 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
         </div>
 
         {selectedCamera === "front" && (
-          <Button 
-            onClick={handleOpenDoor}
-            className="w-full max-w-2xl mx-auto bg-primary hover:bg-primary/80"
-          >
-            Open Door
-          </Button>
+          <div className="flex justify-center">
+            <Button 
+              onClick={handleOpenDoor}
+              className="w-full max-w-md mx-auto bg-primary hover:bg-primary/80"
+            >
+              Open Door
+            </Button>
+          </div>
         )}
       </div>
 
       {showPinDialog && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-secondary p-6 rounded-lg w-full max-w-md">
-            <h3 className="text-lg font-semibold text-white mb-4">Enter PIN to access Front Door Camera</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">Enter PIN to access Camera</h3>
             <div className="space-y-4">
               <Input
                 type="password"
