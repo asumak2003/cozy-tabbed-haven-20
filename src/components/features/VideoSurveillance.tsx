@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Camera } from "lucide-react";
+import { ArrowLeft, Camera, MapPin } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Select,
@@ -62,7 +62,7 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
   return (
     <div className="space-y-4 p-6">
       <div className="flex justify-between items-center mb-4">
-        <Button variant="ghost" onClick={onBack}>
+        <Button variant="ghost" onClick={onBack} className="text-primary">
           <ArrowLeft className="h-6 w-6" />
         </Button>
         <h2 className="text-2xl font-semibold text-white">Video Surveillance</h2>
@@ -85,7 +85,11 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
 
         <div className="w-full max-w-2xl mx-auto aspect-video bg-black/90 rounded-lg flex items-center justify-center">
           <div className="text-center text-white">
-            <Camera className="h-12 w-12 mx-auto mb-2 text-primary" />
+            {selectedCamera !== "front" ? (
+              <MapPin className="h-12 w-12 mx-auto mb-2 text-primary" />
+            ) : (
+              <Camera className="h-12 w-12 mx-auto mb-2 text-primary" />
+            )}
             <p className="text-lg">
               {getCameraLabel(selectedCamera)}
             </p>
