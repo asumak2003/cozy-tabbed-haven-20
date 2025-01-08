@@ -169,7 +169,7 @@ export const SmartHomeDashboard = () => {
         </h1>
         <div className="flex items-center gap-4">
           {!selectedFeature && !selectedRoom && !showEnergyManagement && (
-            <>
+            <div className="flex gap-4">
               <Button onClick={() => setShowAddRoom(true)}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add Room
@@ -178,7 +178,7 @@ export const SmartHomeDashboard = () => {
                 <Video className="mr-2 h-4 w-4" />
                 Video Surveillance
               </Button>
-            </>
+            </div>
           )}
           {selectedRoom && !selectedFeature && (
             <Button onClick={() => setShowAddFeature(true)}>
@@ -200,7 +200,7 @@ export const SmartHomeDashboard = () => {
       {showEnergyManagement ? (
         <EnergyManagement />
       ) : selectedFeature ? (
-        <div>
+        <div className="container mx-auto">
           <h2 className="text-2xl font-semibold text-white mb-6">
             {selectedRoom} → {selectedFeature}
           </h2>
@@ -209,24 +209,26 @@ export const SmartHomeDashboard = () => {
           </div>
         </div>
       ) : selectedRoom ? (
-        <>
+        <div className="container mx-auto">
           <h2 className="text-2xl font-semibold text-white mb-6">{selectedRoom}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
             {features.map((feature) => (
               <div
                 key={feature}
                 onClick={() => handleFeatureSelect(feature)}
+                className="flex"
               >
                 <RoomCard
                   type={feature.toLowerCase() as any}
                   title={feature}
                   onDelete={() => handleDeleteFeature(feature)}
                   showDelete={!defaultFeatures.includes(feature)}
+                  className="w-full"
                 />
               </div>
             ))}
           </div>
-        </>
+        </div>
       ) : (
         <HomeScreen 
           rooms={rooms}
