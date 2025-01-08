@@ -211,22 +211,24 @@ export const SmartHomeDashboard = () => {
       ) : selectedRoom ? (
         <div className="container mx-auto">
           <h2 className="text-2xl font-semibold text-white mb-6">{selectedRoom}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
-            {features.map((feature) => (
-              <div
-                key={feature}
-                onClick={() => handleFeatureSelect(feature)}
-                className="flex"
-              >
-                <RoomCard
-                  type={feature.toLowerCase() as any}
-                  title={feature}
-                  onDelete={() => handleDeleteFeature(feature)}
-                  showDelete={!defaultFeatures.includes(feature)}
-                  className="w-full"
-                />
-              </div>
-            ))}
+          <div className="flex justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr max-w-7xl">
+              {features.map((feature) => (
+                <div
+                  key={feature}
+                  onClick={() => handleFeatureSelect(feature)}
+                  className="flex"
+                >
+                  <RoomCard
+                    type={feature.toLowerCase() as any}
+                    title={feature}
+                    onDelete={() => handleDeleteFeature(feature)}
+                    showDelete={!defaultFeatures.includes(feature)}
+                    className="w-full"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       ) : (
