@@ -19,10 +19,18 @@ export const RoomGrid = ({ rooms, onRoomSelect, onRoomDelete }: RoomGridProps) =
     }
   };
 
+  // Calculate the number of columns based on the number of rooms
+  const getGridCols = (count: number) => {
+    if (count <= 3) return `grid-cols-${count}`;
+    if (count === 4) return "grid-cols-2 md:grid-cols-4";
+    if (count === 5) return "grid-cols-3 md:grid-cols-5";
+    return "grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
+  };
+
   return (
     <div className="container mx-auto px-4">
       <div className="flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr max-w-7xl">
+        <div className={`grid ${getGridCols(rooms.length)} gap-6 auto-rows-fr w-full max-w-7xl`}>
           {rooms.map((room) => (
             <div
               key={room}

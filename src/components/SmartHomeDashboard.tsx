@@ -153,6 +153,14 @@ export const SmartHomeDashboard = () => {
 
   const showBackButton = Boolean(selectedRoom || selectedFeature || showEnergyManagement || showVideoSurveillance);
 
+  // Calculate the number of columns based on the number of items
+  const getGridCols = (count: number) => {
+    if (count <= 3) return `grid-cols-${count}`;
+    if (count === 4) return "grid-cols-2 md:grid-cols-4";
+    if (count === 5) return "grid-cols-3 md:grid-cols-5";
+    return "grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
+  };
+
   if (showVideoSurveillance) {
     return (
       <div className="fixed inset-0 bg-[#1a1b26] z-50">
@@ -212,7 +220,7 @@ export const SmartHomeDashboard = () => {
         <div className="container mx-auto">
           <h2 className="text-2xl font-semibold text-white mb-6">{selectedRoom}</h2>
           <div className="flex justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr max-w-7xl">
+            <div className={`grid ${getGridCols(features.length)} gap-6 auto-rows-fr w-full max-w-7xl`}>
               {features.map((feature) => (
                 <div
                   key={feature}
