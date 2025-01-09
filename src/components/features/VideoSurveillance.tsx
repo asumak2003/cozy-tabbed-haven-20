@@ -19,6 +19,7 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
   const [selectedCamera, setSelectedCamera] = useState("front");
   const [showPinDialog, setShowPinDialog] = useState(false);
   const [pin, setPin] = useState("");
+  const [pendingCamera, setPendingCamera] = useState<string | null>(null);
 
   const getCameraLabel = (camera: string) => {
     switch (camera) {
@@ -41,6 +42,7 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
     if (value === "front") {
       setSelectedCamera(value);
     } else {
+      setPendingCamera(value);
       setShowPinDialog(true);
       if (!showPinDialog) {
         setPin("");
@@ -49,10 +51,12 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
   };
 
   const handlePinSubmit = () => {
-    if (pin === "1234") {
-      setSelectedCamera("front");
+    if (pin === "1234" && pendingCamera) {
+      setSelectedCamera(pendingCamera);
       setShowPinDialog(false);
       setPin("");
+      setPendingCamera(null);
+      toast.success(`Switched to ${getCameraLabel(pendingCamera)}`);
     } else {
       toast.error("Incorrect PIN!");
     }
@@ -130,6 +134,7 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
                   onClick={() => {
                     setShowPinDialog(false);
                     setPin("");
+                    setPendingCamera(null);
                   }}
                 >
                   Cancel
