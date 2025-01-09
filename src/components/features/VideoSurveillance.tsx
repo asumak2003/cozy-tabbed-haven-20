@@ -20,6 +20,7 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
   const [showPinDialog, setShowPinDialog] = useState(false);
   const [pin, setPin] = useState("");
   const [pendingCamera, setPendingCamera] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const getCameraLabel = (camera: string) => {
     switch (camera) {
@@ -39,8 +40,11 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
   };
 
   const handleCameraChange = (value: string) => {
-    if (value === "front") {
+    if (value === "front" || isAuthenticated) {
       setSelectedCamera(value);
+      if (value !== "front") {
+        toast.success(`Switched to ${getCameraLabel(value)}`);
+      }
     } else {
       setPendingCamera(value);
       setShowPinDialog(true);
@@ -56,6 +60,7 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
       setShowPinDialog(false);
       setPin("");
       setPendingCamera(null);
+      setIsAuthenticated(true);
       toast.success(`Switched to ${getCameraLabel(pendingCamera)}`);
     } else {
       toast.error("Incorrect PIN!");
@@ -69,11 +74,11 @@ export const VideoSurveillance = ({ onBack }: VideoSurveillanceProps) => {
   return (
     <div className="space-y-4 p-6">
       <div className="flex justify-between items-center mb-4">
-        <Button variant="ghost" onClick={onBack} className="text-primary">
-          <ArrowLeft className="h-6 w-6" />
-        </Button>
         <h2 className="text-2xl font-semibold text-white">Video Surveillance</h2>
-        <div className="w-6" /> {/* Spacer for alignment */}
+        <Button variant="ghost" onClick={onBack} className="text-primary">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
       </div>
 
       <div className="space-y-4">
